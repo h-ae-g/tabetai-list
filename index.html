@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f7f5">
+<title>食べたい！</title>
+<style>
+:root {
+  --bg:#f7f7f5; --surface:#fff; --text:#353632;
+  --muted:#92938c; --line:#e9e9e4; --accent:#8b9b82;
+  --accent-light:#edf1e9; --danger:#b76e65;
+}
+* {box-sizing:border-box}
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+  font-size:15px; line-height:1.6;
+}
+button,input,textarea,select {font:inherit}
+button {cursor:pointer}
+header {
+  padding:28px 20px 18px; max-width:760px; margin:auto;
+}
+.brand {font-size:25px;font-weight:700;letter-spacing:.04em}
+.subtitle {font-size:12px;color:var(--muted);margin-top:2px}
+main {max-width:760px;margin:auto;padding:0 16px 60px}
+.panel {
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:17px;margin-bottom:14px;
+}
+h2 {font-size:15px;margin:0 0 14px;font-weight:650}
+label {display:block;font-size:12px;color:#777970;margin:12px 0 5px}
+input,textarea,select {
+  width:100%;border:1px solid var(--line);border-radius:8px;
+  padding:11px 12px;background:#fff;color:var(--text);
+  outline:none;min-width:0;
+}
+input:focus,textarea:focus,select:focus {border-color:var(--accent)}
+textarea {resize:vertical;min-height:72px}
+.primary {
+  background:var(--accent);color:white;border:0;border-radius:8px;
+  padding:11px 17px;font-weight:600;
+}
+.secondary {
+  background:var(--accent-light);color:#58664f;border:0;
+  border-radius:8px;padding:9px 13px;
+}
+.ghost {
+  background:transparent;border:1px solid var(--line);
+  border-radius:8px;padding:8px 12px;color:var(--text);
+}
+.danger {color:var(--danger)}
+.actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.stats {display:flex;gap:24px;align-items:center}
+.stat strong {font-size:23px;display:block;font-weight:650}
+.stat span {font-size:11px;color:var(--muted)}
+.stat-divider {height:38px;width:1px;background:var(--line)}
+.search-row {display:flex;gap:8px;align-items:center}
+.search-row input {flex:1}
+.filters {
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px
+}
+.filters label {margin:0}
+.filters select {margin-top:5px}
+.list-head {
+  display:flex;justify-content:space-between;align-items:center;
+  margin:20px 2px 10px;
+}
+.list-head h2 {margin:0}
+.count {font-size:12px;color:var(--muted)}
+.item {
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:15px;margin-bottom:10px;
+}
+.item-top {display:flex;gap:10px;align-items:flex-start}
+.item-main {flex:1;min-width:0}
+.item-name {font-size:17px;font-weight:650;overflow-wrap:anywhere}
+.item.eaten .item-name {color:#92938c;text-decoration:line-through}
+.meta {font-size:12px;color:var(--muted);margin-top:3px}
+.tag {
+  display:inline-block;font-size:11px;background:var(--accent-light);
+  color:#64715d;padding:3px 8px;border-radius:3px;margin-top:8px;
+}
+.status {font-size:11px;color:var(--muted);white-space:nowrap}
+.item-notes {
+  font-size:13px;color:#696b64;margin-top:10px;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.item-actions {
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  border-top:1px solid var(--line);padding-top:11px;margin-top:12px;
+}
+.item-actions button,.item-actions select {font-size:12px}
+.item-actions select {width:auto;padding:6px 8px}
+.check-label {display:flex;align-items:center;gap:7px;font-size:12px;color:#6c6e66}
+.check-label input {width:17px;height:17px;accent-color:var(--accent)}
+.shop-link {color:#71866a;text-decoration:none;font-size:12px}
+.empty {text-align:center;padding:35px 10px;color:var(--muted);font-size:13px}
+.category-row {display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.category-chip {
+  background:#f4f4f0;border-radius:5px;padding:5px 9px;
+  font-size:12px;display:flex;gap:7px;align-items:center;
+}
+.category-chip button {border:0;background:none;color:#777;padding:0}
+details summary {cursor:pointer;font-size:13px;color:#6f7668}
+details {margin-top:15px}
+.small-note {font-size:11px;color:var(--muted);margin-top:8px}
+.hidden {display:none!important}
+footer {text-align:center;color:#aaa;font-size:11px;padding:20px}
+@media(min-width:600px) {
+  header {padding-top:38px}
+  main {padding-left:20px;padding-right:20px}
+  .panel {padding:20px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">食べたい！</div>
+  <div class="subtitle">いつか食べたいものを、忘れないように。</div>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="stats">
+      <div class="stat"><strong id="totalCount">0</strong><span>登録したもの</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><strong id="eatenCount">0</strong><span>食べたもの</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><strong id="uneatenCount">0</strong><span>まだ食べてない</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 id="formTitle">＋ 食べたいものを登録</h2>
+    <form id="menuForm">
+      <input type="hidden" id="editId">
+      <label for="menuName">メニュー名 *</label>
+      <input id="menuName" required maxlength="100" placeholder="例：ふわふわのパンケーキ">
+
+      <label for="categoryInput">カテゴリ</label>
+      <select id="categoryInput">
+        <option value="">カテゴリなし</option>
+      </select>
+
+      <label for="shopName">お店の名前</label>
+      <input id="shopName" maxlength="100" placeholder="例：〇〇カフェ">
+
+      <label for="shopUrl">お店のURL</label>
+      <input id="shopUrl" type="url" placeholder="https://...">
+
+      <label for="customMemo">カスタマイズ・注文メモ</label>
+      <textarea id="customMemo" placeholder="例：チーズ多め、麺かため、トッピングに味玉"></textarea>
+
+      <label for="generalMemo">その他のメモ</label>
+      <textarea id="generalMemo" placeholder="気になったきっかけ、友達のおすすめなど"></textarea>
+
+      <div class="actions">
+        <button class="primary" type="submit" id="saveButton">登録する</button>
+        <button class="ghost hidden" type="button" id="cancelEdit">キャンセル</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>カテゴリ管理</h2>
+    <div class="search-row">
+      <input id="newCategory" maxlength="30" placeholder="カテゴリ名を入力">
+      <button class="secondary" id="addCategory" type="button">追加</button>
+    </div>
+    <div id="categoryList" class="category-row"></div>
+    <div class="small-note">カテゴリ名の変更・削除ができます。</div>
+  </section>
+
+  <section>
+    <div class="search-row">
+      <input id="searchInput" placeholder="メニュー名・お店の名前で検索">
+    </div>
+    <div class="filters">
+      <label>食べたかどうか
+        <select id="statusFilter">
+          <option value="all">すべて</option>
+          <option value="uneaten">まだ食べてない</option>
+          <option value="eaten">食べた</option>
+        </select>
+      </label>
+      <label>カテゴリ
+        <select id="categoryFilter"><option value="all">すべて</option></select>
+      </label>
+      <label>リピート評価
+        <select id="ratingFilter">
+          <option value="all">すべて</option>
+          <option value="yes">リピあり</option>
+          <option value="no">リピなし</option>
+          <option value="unrated">未評価</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <div class="list-head">
+    <h2>食べたいものリスト</h2>
+    <span class="count" id="resultCount"></span>
+  </div>
+  <div id="menuList"></div>
+
+  <section class="panel" style="margin-top:24px">
+    <h2>データのバックアップ</h2>
+    <div class="actions">
+      <button class="secondary" id="exportButton">JSONを書き出す</button>
+      <button class="ghost" id="importButton">JSONを読み込む</button>
+      <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+    </div>
+    <div class="small-note">機種変更やブラウザのデータ削除に備えて、ときどきバックアップしてね。読み込みは現在のデータを置き換えます。</div>
+  </section>
+  <footer>食べたい！</footer>
+</main>
+
+<script>
+const STORAGE_KEY = "tabetai-list-v1";
+let menus = [];
+let categories = [];
+
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    menus = Array.isArray(saved.menus) ? saved.menus : [];
+    categories = Array.isArray(saved.categories) ? saved.categories : [];
+  } catch(e) {
+    menus = []; categories = [];
+    alert("保存データを読み込めませんでした。");
+  }
+}
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({menus,categories}));
+  } catch(e) {
+    alert("保存できませんでした。ブラウザの空き容量を確認してください。");
+  }
+}
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+function safeUrl(value) {
+  try {
+    const u = new URL(value);
+    return ["http:","https:"].includes(u.protocol) ? u.href : "";
+  } catch(e) { return ""; }
+}
+function render() {
+  renderStats();
+  renderCategoryOptions();
+  renderCategories();
+  renderMenus();
+}
+function renderStats() {
+  const eaten = menus.filter(m => m.eaten).length;
+  document.getElementById("totalCount").textContent = menus.length;
+  document.getElementById("eatenCount").textContent = eaten;
+  document.getElementById("uneatenCount").textContent = menus.length-eaten;
+}
+function renderCategoryOptions() {
+  const form = document.getElementById("categoryInput");
+  const filter = document.getElementById("categoryFilter");
+  const oldForm = form.value, oldFilter = filter.value;
+  form.innerHTML = '<option value="">カテゴリなし</option>' +
+    categories.map(c => `<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)}</option>`).join("");
+  filter.innerHTML = '<option value="all">すべて</option><option value="">カテゴリなし</option>' +
+    categories.map(c => `<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)}</option>`).join("");
+  if ([...form.options].some(o=>o.value===oldForm)) form.value=oldForm;
+  if ([...filter.options].some(o=>o.value===oldFilter)) filter.value=oldFilter;
+}
+function renderCategories() {
+  const el = document.getElementById("categoryList");
+  el.innerHTML = categories.length ? categories.map(c => `
+    <span class="category-chip">
+      ${escapeHTML(c.name)}
+      <button type="button" data-edit-cat="${escapeHTML(c.id)}" aria-label="カテゴリを変更">✎</button>
+      <button type="button" data-delete-cat="${escapeHTML(c.id)}" aria-label="カテゴリを削除">×</button>
+    </span>`).join("") : '<span class="small-note">まだカテゴリはありません。</span>';
+}
+function renderMenus() {
+  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+  const status = document.getElementById("statusFilter").value;
+  const cat = document.getElementById("categoryFilter").value;
+  const rating = document.getElementById("ratingFilter").value;
+  const filtered = menus.filter(m => {
+    const text = (m.name+" "+(m.shop||"")).toLowerCase();
+    if (search && !text.includes(search)) return false;
+    if (status==="eaten" && !m.eaten) return false;
+    if (status==="uneaten" && m.eaten) return false;
+    if (cat!=="all" && (m.category||"")!==cat) return false;
+    if (rating==="yes" && (!m.eaten || m.rating!=="yes")) return false;
+    if (rating==="no" && (!m.eaten || m.rating!=="no")) return false;
+    if (rating==="unrated" && (!m.eaten || m.rating!=="unrated")) return false;
+    return true;
+  }).sort((a,b) => Number(a.eaten)-Number(b.eaten) || b.created-a.created);
+
+  document.getElementById("resultCount").textContent = filtered.length+"件";
+  const list = document.getElementById("menuList");
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty">該当するものがありません。<br>気になるメニューを登録してみよう。</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(m => {
+    const category = categories.find(c=>c.id===m.category);
+    const url = safeUrl(m.url);
+    return `
+    <article class="item ${m.eaten?"eaten":""}">
+      <div class="item-top">
+        <div class="item-main">
+          <div class="item-name">${escapeHTML(m.name)}</div>
+          ${m.shop?`<div class="meta">${escapeHTML(m.shop)}</div>`:""}
+          ${category?`<span class="tag">${escapeHTML(category.name)}</span>`:""}
+          ${url?`<div><a class="shop-link" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">お店のページを開く ↗</a></div>`:""}
+        </div>
+        <span class="status">${m.eaten?"食べた ✓":"食べたい"}</span>
+      </div>
+      ${m.customMemo?`<div class="item-notes"><strong>注文メモ：</strong>${escapeHTML(m.customMemo)}</div>`:""}
+      ${m.memo?`<div class="item-notes"><strong>メモ：</strong>${escapeHTML(m.memo)}</div>`:""}
+      <div class="item-actions">
+        <label class="check-label">
+          <input type="checkbox" data-eaten="${escapeHTML(m.id)}" ${m.eaten?"checked":""}>
+          食べた！
+        </label>
+        ${m.eaten?`
+          <select data-rating="${escapeHTML(m.id)}" aria-label="リピート評価">
+            <option value="unrated" ${m.rating==="unrated"?"selected":""}>未評価</option>
+            <option value="yes" ${m.rating==="yes"?"selected":""}>リピあり</option>
+            <option value="no" ${m.rating==="no"?"selected":""}>リピなし</option>
+          </select>`:""}
+        <button class="ghost" data-edit="${escapeHTML(m.id)}">編集</button>
+        <button class="ghost danger" data-delete="${escapeHTML(m.id)}">削除</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+function resetForm() {
+  document.getElementById("menuForm").reset();
+  document.getElementById("editId").value="";
+  document.getElementById("formTitle").textContent="＋ 食べたいものを登録";
+  document.getElementById("saveButton").textContent="登録する";
+  document.getElementById("cancelEdit").classList.add("hidden");
+}
+document.getElementById("menuForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const id = document.getElementById("editId").value;
+  const name = document.getElementById("menuName").value.trim();
+  const rawUrl = document.getElementById("shopUrl").value.trim();
+  if (!name) return;
+  if (rawUrl && !safeUrl(rawUrl)) {
+    alert("URLは http:// または https:// から始まるものを入力してね。");
+    return;
+  }
+  const data = {
+    name,
+    category:document.getElementById("categoryInput").value,
+    shop:document.getElementById("shopName").value.trim(),
+    url:rawUrl,
+    customMemo:document.getElementById("customMemo").value.trim(),
+    memo:document.getElementById("generalMemo").value.trim()
+  };
+  if (id) {
+    const m = menus.find(x=>x.id===id);
+    if (m) Object.assign(m,data);
+  } else {
+    menus.push({id:uid(),...data,eaten:false,rating:"unrated",created:Date.now()});
+  }
+  saveData(); resetForm(); render();
+});
+document.getElementById("cancelEdit").addEventListener("click", resetForm);
+
+document.getElementById("addCategory").addEventListener("click", () => {
+  const input = document.getElementById("newCategory");
+  const name = input.value.trim();
+  if (!name) return;
+  if (categories.some(c=>c.name===name)) {
+    alert("同じ名前のカテゴリがあるよ。"); return;
+  }
+  categories.push({id:uid(),name});
+  input.value=""; saveData(); render();
+});
+document.getElementById("categoryList").addEventListener("click", e => {
+  const editId = e.target.dataset.editCat;
+  const deleteId = e.target.dataset.deleteCat;
+  if (editId) {
+    const c=categories.find(x=>x.id===editId);
+    const name=prompt("新しいカテゴリ名を入力",c.name);
+    if (name===null) return;
+    const clean=name.trim();
+    if (!clean) {alert("カテゴリ名を入力してね。");return;}
+    if (categories.some(x=>x.id!==editId && x.name===clean)) {
+      alert("同じ名前のカテゴリがあるよ。");return;
+    }
+    c.name=clean; saveData(); render();
+  }
+  if (deleteId) {
+    const c=categories.find(x=>x.id===deleteId);
+    if (!confirm(`「${c.name}」を削除する？\nこのカテゴリが付いたメニューはカテゴリなしになるよ。`)) return;
+    menus.forEach(m=>{if(m.category===deleteId)m.category="";});
+    categories=categories.filter(x=>x.id!==deleteId);
+    saveData();render();
+  }
+});
+document.getElementById("menuList").addEventListener("click", e => {
+  const editId=e.target.dataset.edit;
+  const deleteId=e.target.dataset.delete;
+  if (editId) {
+    const m=menus.find(x=>x.id===editId);
+    if (!m) return;
+    document.getElementById("editId").value=m.id;
+    document.getElementById("menuName").value=m.name;
+    document.getElementById("categoryInput").value=m.category||"";
+    document.getElementById("shopName").value=m.shop||"";
+    document.getElementById("shopUrl").value=m.url||"";
+    document.getElementById("customMemo").value=m.customMemo||"";
+    document.getElementById("generalMemo").value=m.memo||"";
+    document.getElementById("formTitle").textContent="メニューを編集";
+    document.getElementById("saveButton").textContent="変更を保存";
+    document.getElementById("cancelEdit").classList.remove("hidden");
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  if (deleteId) {
+    const m=menus.find(x=>x.id===deleteId);
+    if (m && confirm(`「${m.name}」を削除する？`)) {
+      menus=menus.filter(x=>x.id!==deleteId);saveData();render();
+    }
+  }
+});
+document.getElementById("menuList").addEventListener("change", e => {
+  const eatenId=e.target.dataset.eaten;
+  const ratingId=e.target.dataset.rating;
+  if (eatenId) {
+    const m=menus.find(x=>x.id===eatenId);
+    if (m) {m.eaten=e.target.checked;if(!m.eaten)m.rating="unrated";}
+    saveData();render();
+  }
+  if (ratingId) {
+    const m=menus.find(x=>x.id===ratingId);
+    if (m) m.rating=e.target.value;
+    saveData();render();
+  }
+});
+["searchInput","statusFilter","categoryFilter","ratingFilter"].forEach(id => {
+  document.getElementById(id).addEventListener("input",renderMenus);
+  document.getElementById(id).addEventListener("change",renderMenus);
+});
+document.getElementById("exportButton").addEventListener("click", () => {
+  const blob=new Blob([JSON.stringify({menus,categories},null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="tabetai-backup.json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+document.getElementById("importButton").addEventListener("click",()=>{
+  document.getElementById("importFile").click();
+});
+document.getElementById("importFile").addEventListener("change", async e => {
+  const file=e.target.files[0];if(!file)return;
+  try {
+    const data=JSON.parse(await file.text());
+    if (!data || !Array.isArray(data.menus) || !Array.isArray(data.categories))
+      throw new Error("形式が違います");
+    if (!confirm("現在のデータをすべて置き換えて読み込みます。よろしいですか？")) return;
+    menus=data.menus;
+    categories=data.categories;
+    saveData();render();
+    alert("データを読み込みました！");
+  } catch(err) {
+    alert("読み込めませんでした。正しいバックアップファイルか確認してね。");
+  } finally {e.target.value="";}
+});
+loadData();
+render();
+</script>
+</body>
+</html>
