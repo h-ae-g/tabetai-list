@@ -38,9 +38,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--accent)}
 .list-head{display:flex;justify-content:space-between;align-items:center;margin:16px 2px 9px}
 .list-head h2{font-size:14px;margin:0;font-weight:700}
 .count{font-size:11px;color:var(--muted)}
-.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow)}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow);transition:border-color .15s,background .15s,transform .15s}
+.item.rating-yes{background:#fff1e5;border:1px solid #e8c5a7}
+.item.rating-no{background:#f1f6fa;border:1px solid #d5e2ec}
+.item.dragging{opacity:.48;transform:scale(.985);border:1px dashed var(--accent)}
+.item-title-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.drag-handle{border:0;background:transparent;color:#b5a79a;padding:3px 2px;display:grid;place-items:center;flex-shrink:0;touch-action:none;cursor:grab}
+.drag-handle:active{color:var(--accent-dark);cursor:grabbing}
+.drag-handle svg{width:17px;height:19px}
+.drag-hint{font-size:10px;color:#a29488;margin:-3px 2px 8px}
 .item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.item-name{font-size:16px;font-weight:700;line-height:1.4;overflow-wrap:anywhere;flex:1;min-width:0}
+.item-name{font-size:16px;font-weight:700;line-height:1.4;overflow-wrap:anywhere;flex:1;min-width:0;color:var(--text)}
 .icon-actions{display:flex;align-items:center;gap:17px;flex-shrink:0;margin-right:1px}
 .icon-btn{border:0;background:transparent;padding:2px;color:#9c8e83;display:grid;place-items:center}
 .icon-btn.edit{color:#88715f}
@@ -173,17 +181,20 @@ footer{text-align:center;color:#b3a69b;font-size:10px;padding:20px}
 
 <script>
 const STORAGE_KEY = "tabetai-list-v1";
-let menus = [], categories = [], currentTab = "want", toastTimer;
+let menus = [], categories = [], wantOrder = [], currentTab = "want", toastTimer, dragState = null;
 const $ = id => document.getElementById(id);
 function loadData(){
   try{
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     menus = Array.isArray(saved.menus) ? saved.menus : [];
     categories = Array.isArray(saved.categories) ? saved.categories : [];
-  }catch(e){menus=[];categories=[];alert("保存データを読み込めませんでした。");}
+    const validWantIds = menus.filter(m=>!m.eaten).map(m=>m.id);
+    wantOrder = Array.isArray(saved.wantOrder) ? saved.wantOrder.filter(id=>validWantIds.includes(id)) : [];
+    validWantIds.forEach(id=>{if(!wantOrder.includes(id))wantOrder.push(id);});
+  }catch(e){menus=[];categories=[];wantOrder=[];alert("保存データを読み込めませんでした。");}
 }
 function saveData(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({menus,categories}));}
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({menus,categories,wantOrder}));}
   catch(e){alert("保存できませんでした。ブラウザの空き容量を確認してください。");}
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
@@ -232,25 +243,37 @@ const editSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const deleteSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>';
 function renderMenus(){
   const search=$("searchInput").value.trim().toLowerCase(),cat=$("categoryFilter").value,rating=$("ratingFilter").value;
-  const filtered=menus.filter(m=>{
+  const dragEnabled=currentTab==="want"&&!search&&cat==="all";
+  let filtered=menus.filter(m=>{
     if(currentTab==="want"&&m.eaten)return false;
     if(currentTab==="eaten"&&!m.eaten)return false;
     if(search&&!(m.name+" "+(m.shop||"")).toLowerCase().includes(search))return false;
     if(cat!=="all"&&(m.category||"")!==cat)return false;
     if(currentTab==="eaten"&&rating!=="all"&&(m.rating||"unrated")!==rating)return false;
     return true;
-  }).sort((a,b)=>(b.created||0)-(a.created||0));
+  });
+  if(currentTab==="want"){
+    const rank=new Map(wantOrder.map((id,i)=>[id,i]));
+    filtered.sort((a,b)=>(rank.get(a.id)??Number.MAX_SAFE_INTEGER)-(rank.get(b.id)??Number.MAX_SAFE_INTEGER));
+  }else{
+    const ratingRank={yes:0,unrated:1,no:2};
+    filtered.sort((a,b)=>(ratingRank[a.rating||"unrated"]??1)-(ratingRank[b.rating||"unrated"]??1)||(b.created||0)-(a.created||0));
+  }
   $("resultCount").textContent=filtered.length+"件";
   $("listTitle").textContent=currentTab==="want"?"食べたいものリスト":"食べたものリスト";
   $("ratingFilterWrap").classList.toggle("hidden",currentTab!=="eaten");
   $("wantTab").classList.toggle("active",currentTab==="want");$("eatenTab").classList.toggle("active",currentTab==="eaten");
   if(!filtered.length){$("menuList").innerHTML='<div class="empty">まだ登録がありません。<br>気になるメニューを追加してみよう。</div>';return;}
-  $("menuList").innerHTML=filtered.map(m=>{
+  $("menuList").innerHTML=(dragEnabled?'<div class="drag-hint">左の点々をドラッグして、好きな順番に並べ替えられるよ</div>':'')+filtered.map(m=>{
     const c=categories.find(x=>x.id===m.category),url=safeUrl(m.url);
     const hasMemo=!!(m.customMemo||m.memo);
-    return `<article class="item">
+    const ratingClass=m.eaten&&m.rating==="yes"?" rating-yes":m.eaten&&m.rating==="no"?" rating-no":"";
+    return `<article class="item${ratingClass}" data-item-id="${esc(m.id)}">
       <div class="item-head">
-        <div class="item-name">${esc(m.name)}</div>
+        <div class="item-title-wrap">
+          ${dragEnabled?'<button class="drag-handle" type="button" aria-label="ドラッグして並べ替え"><svg viewBox="0 0 12 20" fill="currentColor" aria-hidden="true"><circle cx="3" cy="3" r="1.4"/><circle cx="9" cy="3" r="1.4"/><circle cx="3" cy="10" r="1.4"/><circle cx="9" cy="10" r="1.4"/><circle cx="3" cy="17" r="1.4"/><circle cx="9" cy="17" r="1.4"/></svg></button>':''}
+          <div class="item-name">${esc(m.name)}</div>
+        </div>
         <div class="icon-actions">
           <button class="icon-btn delete" type="button" data-delete="${esc(m.id)}" aria-label="削除">${deleteSvg}</button>
           <button class="icon-btn edit" type="button" data-edit="${esc(m.id)}" aria-label="編集">${editSvg}</button>
@@ -288,7 +311,7 @@ $("menuForm").addEventListener("submit",e=>{
   if(rawUrl&&!safeUrl(rawUrl)){alert("URLは http:// または https:// から始まるものを入力してね。");return;}
   const data={name,category:$("categoryInput").value,shop:$("shopName").value.trim(),url:rawUrl,customMemo:$("customMemo").value.trim(),memo:$("generalMemo").value.trim()};
   if(id){const m=menus.find(x=>x.id===id);if(m)Object.assign(m,data);}
-  else menus.push({id:uid(),...data,eaten:false,rating:"unrated",created:Date.now()});
+  else {const newItem={id:uid(),...data,eaten:false,rating:"unrated",created:Date.now()};menus.push(newItem);wantOrder.push(newItem.id);}
   saveData();showList();showToast(id?"変更を保存したよ！":"登録完了！");
 });
 $("addCategory").addEventListener("click",()=>{
@@ -316,16 +339,40 @@ $("menuList").addEventListener("click",e=>{
   const eatenId=e.target.closest("[data-eaten]")?.dataset.eaten;
   const memoId=e.target.closest("[data-memo]")?.dataset.memo;
   if(editId){const m=menus.find(x=>x.id===editId);if(m)showForm(m);}
-  if(deleteId){const m=menus.find(x=>x.id===deleteId);if(m&&confirm(`「${m.name}」を削除する？\nこの操作は取り消せません。`)){menus=menus.filter(x=>x.id!==deleteId);saveData();render();showToast("削除したよ。");}}
-  if(eatenId){const m=menus.find(x=>x.id===eatenId);if(m){m.eaten=!m.eaten;if(!m.eaten)m.rating="unrated";saveData();render();}}
+  if(deleteId){const m=menus.find(x=>x.id===deleteId);if(m&&confirm(`「${m.name}」を削除する？\nこの操作は取り消せません。`)){menus=menus.filter(x=>x.id!==deleteId);wantOrder=wantOrder.filter(id=>id!==deleteId);saveData();render();showToast("削除したよ。");}}
+  if(eatenId){const m=menus.find(x=>x.id===eatenId);if(m){m.eaten=!m.eaten;if(m.eaten){wantOrder=wantOrder.filter(id=>id!==m.id);}else{m.rating="unrated";if(!wantOrder.includes(m.id))wantOrder.push(m.id);}saveData();render();}}
   if(memoId){const el=$("memo-"+memoId);if(el){const opening=el.classList.contains("hidden");el.classList.toggle("hidden");e.target.closest("[data-memo]").textContent=opening?"メモを閉じる −":"メモを見る ＋";}}
 });
 $("menuList").addEventListener("change",e=>{
   const id=e.target.dataset.rating;if(!id)return;const m=menus.find(x=>x.id===id);if(m){m.rating=e.target.value;saveData();renderMenus();}
 });
 ["searchInput","categoryFilter","ratingFilter"].forEach(id=>$(id).addEventListener("input",renderMenus));
+// Touch- and mouse-friendly drag sorting for the "want" tab.
+$("menuList").addEventListener("pointerdown",e=>{
+  const handle=e.target.closest(".drag-handle");
+  if(!handle||currentTab!=="want")return;
+  const card=handle.closest(".item");if(!card)return;
+  e.preventDefault();dragState={card,pointerId:e.pointerId};card.classList.add("dragging");
+});
+document.addEventListener("pointermove",e=>{
+  if(!dragState||e.pointerId!==dragState.pointerId)return;
+  e.preventDefault();
+  const target=document.elementFromPoint(e.clientX,e.clientY)?.closest("#menuList .item");
+  if(!target||target===dragState.card)return;
+  const rect=target.getBoundingClientRect();
+  if(e.clientY<rect.top+rect.height/2)target.parentNode.insertBefore(dragState.card,target);
+  else target.parentNode.insertBefore(dragState.card,target.nextSibling);
+},{passive:false});
+function finishDrag(){
+  if(!dragState)return;
+  const card=dragState.card;card.classList.remove("dragging");dragState=null;
+  const ids=[...$("menuList").querySelectorAll(":scope > .item")].map(el=>el.dataset.itemId).filter(Boolean);
+  if(ids.length){wantOrder=ids.concat(wantOrder.filter(id=>!ids.includes(id)));saveData();showToast("並び順を保存したよ！");}
+}
+document.addEventListener("pointerup",finishDrag);
+document.addEventListener("pointercancel",finishDrag);
 $("exportButton").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify({menus,categories},null,2)],{type:"application/json"});
+  const blob=new Blob([JSON.stringify({menus,categories,wantOrder},null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="tabetai-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 $("importButton").addEventListener("click",()=>$("importFile").click());
@@ -333,7 +380,7 @@ $("importFile").addEventListener("change",async e=>{
   const file=e.target.files[0];if(!file)return;
   try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.menus)||!Array.isArray(data.categories))throw new Error("形式が違います");
     if(!confirm("現在のデータをすべて置き換えて読み込みます。よろしいですか？"))return;
-    menus=data.menus;categories=data.categories;saveData();render();alert("データを読み込みました！");
+    menus=data.menus;categories=data.categories;wantOrder=Array.isArray(data.wantOrder)?data.wantOrder.filter(id=>menus.some(m=>m.id===id&&!m.eaten)):menus.filter(m=>!m.eaten).map(m=>m.id);menus.filter(m=>!m.eaten).forEach(m=>{if(!wantOrder.includes(m.id))wantOrder.push(m.id);});saveData();render();alert("データを読み込みました！");
   }catch(err){alert("読み込めませんでした。正しいバックアップファイルか確認してね。");}
   finally{e.target.value="";}
 });
@@ -341,4 +388,3 @@ loadData();render();
 </script>
 </body>
 </html>
-
