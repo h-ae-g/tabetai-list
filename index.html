@@ -1,119 +1,99 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f7f5">
+<meta name="theme-color" content="#fff8f1">
 <title>食べたい！</title>
 <style>
-:root {
-  --bg:#f7f7f5; --surface:#fff; --text:#353632;
-  --muted:#92938c; --line:#e9e9e4; --accent:#8b9b82;
-  --accent-light:#edf1e9; --danger:#b76e65;
+:root{
+  --bg:#fff8f1;--surface:#fff;--text:#39352f;--muted:#92877c;
+  --line:#f0e6dc;--accent:#c58b62;--accent-dark:#a96f48;
+  --accent-pale:#f8eee5;--green:#dcebdd;--green-dark:#63836a;
+  --danger:#b7a69b;--shadow:0 2px 10px rgba(105,75,49,.045)
 }
-* {box-sizing:border-box}
-body {
-  margin:0; background:var(--bg); color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
-  font-size:15px; line-height:1.6;
-}
-button,input,textarea,select {font:inherit}
-button {cursor:pointer}
-header {
-  padding:28px 20px 18px; max-width:760px; margin:auto;
-}
-.brand {font-size:25px;font-weight:700;letter-spacing:.04em}
-.subtitle {font-size:12px;color:var(--muted);margin-top:2px}
-main {max-width:760px;margin:auto;padding:0 16px 60px}
-.panel {
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:12px;padding:17px;margin-bottom:14px;
-}
-h2 {font-size:15px;margin:0 0 14px;font-weight:650}
-label {display:block;font-size:12px;color:#777970;margin:12px 0 5px}
-input,textarea,select {
-  width:100%;border:1px solid var(--line);border-radius:8px;
-  padding:11px 12px;background:#fff;color:var(--text);
-  outline:none;min-width:0;
-}
-input:focus,textarea:focus,select:focus {border-color:var(--accent)}
-textarea {resize:vertical;min-height:72px}
-.primary {
-  background:var(--accent);color:white;border:0;border-radius:8px;
-  padding:11px 17px;font-weight:600;
-}
-.secondary {
-  background:var(--accent-light);color:#58664f;border:0;
-  border-radius:8px;padding:9px 13px;
-}
-.ghost {
-  background:transparent;border:1px solid var(--line);
-  border-radius:8px;padding:8px 12px;color:var(--text);
-}
-.danger {color:var(--danger)}
-.actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.stats {display:flex;gap:24px;align-items:center}
-.stat strong {font-size:23px;display:block;font-weight:650}
-.stat span {font-size:11px;color:var(--muted)}
-.stat-divider {height:38px;width:1px;background:var(--line)}
-.search-row {display:flex;gap:8px;align-items:center}
-.search-row input {flex:1}
-.filters {
-  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px
-}
-.filters label {margin:0}
-.filters select {margin-top:5px}
-.list-head {
-  display:flex;justify-content:space-between;align-items:center;
-  margin:20px 2px 10px;
-}
-.list-head h2 {margin:0}
-.count {font-size:12px;color:var(--muted)}
-.item {
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:12px;padding:15px;margin-bottom:10px;
-}
-.item-top {display:flex;gap:10px;align-items:flex-start}
-.item-main {flex:1;min-width:0}
-.item-name {font-size:17px;font-weight:650;overflow-wrap:anywhere}
-.item.eaten .item-name {color:#92938c;text-decoration:line-through}
-.meta {font-size:12px;color:var(--muted);margin-top:3px}
-.tag {
-  display:inline-block;font-size:11px;background:var(--accent-light);
-  color:#64715d;padding:3px 8px;border-radius:3px;margin-top:8px;
-}
-.status {font-size:11px;color:var(--muted);white-space:nowrap}
-.item-notes {
-  font-size:13px;color:#696b64;margin-top:10px;
-  white-space:pre-wrap;overflow-wrap:anywhere;
-}
-.item-actions {
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  border-top:1px solid var(--line);padding-top:11px;margin-top:12px;
-}
-.item-actions button,.item-actions select {font-size:12px}
-.item-actions select {width:auto;padding:6px 8px}
-.check-label {display:flex;align-items:center;gap:7px;font-size:12px;color:#6c6e66}
-.check-label input {width:17px;height:17px;accent-color:var(--accent)}
-.shop-link {color:#71866a;text-decoration:none;font-size:12px}
-.empty {text-align:center;padding:35px 10px;color:var(--muted);font-size:13px}
-.category-row {display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.category-chip {
-  background:#f4f4f0;border-radius:5px;padding:5px 9px;
-  font-size:12px;display:flex;gap:7px;align-items:center;
-}
-.category-chip button {border:0;background:none;color:#777;padding:0}
-details summary {cursor:pointer;font-size:13px;color:#6f7668}
-details {margin-top:15px}
-.small-note {font-size:11px;color:var(--muted);margin-top:8px}
-.hidden {display:none!important}
-footer {text-align:center;color:#aaa;font-size:11px;padding:20px}
-@media(min-width:600px) {
-  header {padding-top:38px}
-  main {padding-left:20px;padding-right:20px}
-  .panel {padding:20px}
-}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;font-size:15px;line-height:1.55}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{max-width:760px;margin:auto;padding:20px 18px 8px}
+.brand{font-size:23px;font-weight:750;letter-spacing:.04em}
+.subtitle{font-size:11px;color:var(--muted);margin-top:1px}
+main{max-width:760px;margin:auto;padding:8px 14px 90px}
+.summary{display:flex;align-items:center;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 15px;margin:6px 0 15px;box-shadow:var(--shadow)}
+.stat{flex:1;text-align:center;min-width:0}
+.stat strong{display:block;font-size:21px;line-height:1.2;font-weight:700}
+.stat span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.stat+.stat{border-left:1px solid var(--line)}
+.tabs{display:flex;gap:7px;margin:0 1px 12px}
+.tab{flex:1;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:9px;padding:10px 8px;font-size:13px;font-weight:650}
+.tab.active{background:var(--accent-pale);border-color:#ead3c1;color:var(--accent-dark)}
+.search-row{display:flex;gap:8px;align-items:center}
+input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:9px;padding:11px 12px;background:#fff;color:var(--text);outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+.search-row input{padding:10px 12px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.filters label{font-size:11px;color:var(--muted)}
+.filters select{display:block;margin-top:4px;padding:8px 9px;font-size:12px}
+.list-head{display:flex;justify-content:space-between;align-items:center;margin:16px 2px 9px}
+.list-head h2{font-size:14px;margin:0;font-weight:700}
+.count{font-size:11px;color:var(--muted)}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow)}
+.item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.item-name{font-size:16px;font-weight:700;line-height:1.4;overflow-wrap:anywhere;flex:1;min-width:0}
+.icon-actions{display:flex;align-items:center;gap:17px;flex-shrink:0;margin-right:1px}
+.icon-btn{border:0;background:transparent;padding:2px;color:#9c8e83;display:grid;place-items:center}
+.icon-btn.edit{color:#88715f}
+.icon-btn.edit svg{width:21px;height:21px}
+.icon-btn.delete svg{width:17px;height:17px}
+.icon-btn:active{opacity:.55}
+.item-meta{display:flex;align-items:center;justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-top:7px;min-height:18px;font-size:11px;color:var(--muted)}
+.category-label{display:inline-flex;align-items:center;background:var(--accent-pale);color:#98704f;padding:2px 7px;border-radius:4px;font-size:10px}
+.shop-name{overflow-wrap:anywhere}
+.shop-link{color:#98704f;text-decoration:none;font-size:11px;white-space:nowrap}
+.memo-toggle{border:0;background:transparent;padding:7px 0 0;color:#9a816d;font-size:11px}
+.memo-content{margin-top:6px;padding:8px 9px;background:#fcf8f4;border-radius:7px;font-size:12px;color:#6f665e;white-space:pre-wrap;overflow-wrap:anywhere}
+.memo-content strong{color:#8a7666}
+.item-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #f4eee8;margin-top:10px;padding-top:9px;min-height:34px}
+.rating-select{width:auto;max-width:130px;padding:5px 8px;font-size:11px;border-radius:7px}
+.eaten-toggle{display:flex;align-items:center;gap:7px;border:0;background:transparent;padding:0;color:#81776e;font-size:11px}
+.check-circle{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#eee9e4;color:#fff;flex-shrink:0}
+.check-circle.checked{background:var(--green-dark)}
+.check-circle svg{width:15px;height:15px}
+.empty{text-align:center;padding:35px 12px;color:var(--muted);font-size:12px}
+.fab{position:fixed;right:max(20px,calc((100vw - 720px)/2));bottom:22px;width:57px;height:57px;border:0;border-radius:50%;background:var(--accent);color:#fff;font-size:32px;line-height:1;box-shadow:0 4px 14px rgba(130,83,48,.25);z-index:5}
+.fab:active{transform:scale(.96)}
+footer{text-align:center;color:#b3a69b;font-size:10px;padding:20px}
+.hidden{display:none!important}
+/* form screen */
+.form-screen{min-height:75vh}
+.screen-head{display:flex;align-items:center;gap:12px;margin:3px 1px 16px}
+.back-btn{border:0;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 12px;color:#76695f;font-size:12px}
+.screen-head h2{font-size:17px;margin:0}
+.form-panel{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:12px}
+.form-panel label{display:block;font-size:12px;color:#82766c;margin:13px 0 5px}
+.form-panel label:first-child{margin-top:0}
+.form-panel textarea{resize:vertical;min-height:70px}
+.form-actions{display:flex;gap:9px;margin-top:17px}
+.primary,.secondary,.ghost{border:0;border-radius:9px;padding:11px 15px;font-weight:650;font-size:13px}
+.primary{background:var(--accent);color:white;flex:1}
+.secondary{background:var(--accent-pale);color:var(--accent-dark)}
+.ghost{background:#f7f3ef;color:#76695f}
+.category-manager{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.category-manager summary{font-size:12px;color:#8a755f;cursor:pointer}
+.category-add{display:flex;gap:7px;margin-top:10px}
+.category-add input{padding:8px 10px;font-size:12px}
+.category-add button{white-space:nowrap}
+.category-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.category-chip{display:flex;align-items:center;gap:7px;background:#f8f4ef;border-radius:6px;padding:5px 8px;font-size:11px}
+.category-chip button{border:0;background:transparent;color:#88796d;padding:0 2px;font-size:14px}
+.small-note{font-size:10px;color:var(--muted);margin-top:8px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#51483f;color:white;padding:9px 17px;border-radius:20px;font-size:12px;box-shadow:0 3px 12px #0002;z-index:10;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.backup{margin-top:25px;padding:12px 2px;border-top:1px solid var(--line)}
+.backup summary{font-size:11px;color:var(--muted);cursor:pointer}
+.backup .actions{display:flex;gap:8px;margin-top:10px}
+@media(min-width:600px){header{padding-top:28px}main{padding-left:20px;padding-right:20px}.item{padding:15px 17px}}
 </style>
 </head>
 <body>
@@ -121,364 +101,244 @@ footer {text-align:center;color:#aaa;font-size:11px;padding:20px}
   <div class="brand">食べたい！</div>
   <div class="subtitle">いつか食べたいものを、忘れないように。</div>
 </header>
-
 <main>
-  <section class="panel">
-    <div class="stats">
+  <section id="listScreen">
+    <section class="summary">
       <div class="stat"><strong id="totalCount">0</strong><span>登録したもの</span></div>
-      <div class="stat-divider"></div>
       <div class="stat"><strong id="eatenCount">0</strong><span>食べたもの</span></div>
-      <div class="stat-divider"></div>
-      <div class="stat"><strong id="uneatenCount">0</strong><span>まだ食べてない</span></div>
+      <div class="stat"><strong id="uneatenCount">0</strong><span>食べたいもの</span></div>
+    </section>
+    <div class="tabs">
+      <button class="tab active" id="wantTab" type="button">食べたいもの</button>
+      <button class="tab" id="eatenTab" type="button">食べたもの</button>
     </div>
+    <div class="search-row"><input id="searchInput" placeholder="メニュー名・お店の名前で検索"></div>
+    <div class="filters">
+      <label>カテゴリ<select id="categoryFilter"><option value="all">すべて</option></select></label>
+      <label id="ratingFilterWrap">リピート評価<select id="ratingFilter"><option value="all">すべて</option><option value="yes">リピあり</option><option value="no">リピなし</option><option value="unrated">未評価</option></select></label>
+    </div>
+    <div class="list-head"><h2 id="listTitle">食べたいものリスト</h2><span class="count" id="resultCount"></span></div>
+    <div id="menuList"></div>
+    <details class="backup">
+      <summary>データのバックアップ・復元</summary>
+      <div class="actions">
+        <button class="secondary" id="exportButton" type="button">JSONを書き出す</button>
+        <button class="ghost" id="importButton" type="button">JSONを読み込む</button>
+        <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+      </div>
+      <div class="small-note">機種変更やブラウザのデータ削除に備えて、ときどきバックアップしてね。読み込みは現在のデータを置き換えます。</div>
+    </details>
+    <footer>食べたい！</footer>
   </section>
 
-  <section class="panel">
-    <h2 id="formTitle">＋ 食べたいものを登録</h2>
-    <form id="menuForm">
+  <section id="formScreen" class="form-screen hidden">
+    <div class="screen-head">
+      <button class="back-btn" id="backButton" type="button">← 戻る</button>
+      <h2 id="formTitle">食べたいものを登録</h2>
+    </div>
+    <form id="menuForm" class="form-panel">
       <input type="hidden" id="editId">
       <label for="menuName">メニュー名 *</label>
       <input id="menuName" required maxlength="100" placeholder="例：ふわふわのパンケーキ">
-
       <label for="categoryInput">カテゴリ</label>
-      <select id="categoryInput">
-        <option value="">カテゴリなし</option>
-      </select>
-
+      <select id="categoryInput"><option value="">カテゴリなし</option></select>
       <label for="shopName">お店の名前</label>
       <input id="shopName" maxlength="100" placeholder="例：〇〇カフェ">
-
       <label for="shopUrl">お店のURL</label>
       <input id="shopUrl" type="url" placeholder="https://...">
-
       <label for="customMemo">カスタマイズ・注文メモ</label>
       <textarea id="customMemo" placeholder="例：チーズ多め、麺かため、トッピングに味玉"></textarea>
-
       <label for="generalMemo">その他のメモ</label>
       <textarea id="generalMemo" placeholder="気になったきっかけ、友達のおすすめなど"></textarea>
-
-      <div class="actions">
+      <div class="form-actions">
         <button class="primary" type="submit" id="saveButton">登録する</button>
-        <button class="ghost hidden" type="button" id="cancelEdit">キャンセル</button>
+        <button class="ghost" type="button" id="cancelButton">キャンセル</button>
+      </div>
+      <div class="category-manager">
+        <details>
+          <summary>カテゴリを管理する（追加・変更・削除）</summary>
+          <div class="category-add">
+            <input id="newCategory" maxlength="30" placeholder="新しいカテゴリ名">
+            <button class="secondary" id="addCategory" type="button">追加</button>
+          </div>
+          <div id="categoryList" class="category-row"></div>
+          <div class="small-note">カテゴリ名を変更すると、登録済みメニューにも反映されます。削除したカテゴリのメニューは「カテゴリなし」になります。</div>
+        </details>
       </div>
     </form>
   </section>
-
-  <section class="panel">
-    <h2>カテゴリ管理</h2>
-    <div class="search-row">
-      <input id="newCategory" maxlength="30" placeholder="カテゴリ名を入力">
-      <button class="secondary" id="addCategory" type="button">追加</button>
-    </div>
-    <div id="categoryList" class="category-row"></div>
-    <div class="small-note">カテゴリ名の変更・削除ができます。</div>
-  </section>
-
-  <section>
-    <div class="search-row">
-      <input id="searchInput" placeholder="メニュー名・お店の名前で検索">
-    </div>
-    <div class="filters">
-      <label>食べたかどうか
-        <select id="statusFilter">
-          <option value="all">すべて</option>
-          <option value="uneaten">まだ食べてない</option>
-          <option value="eaten">食べた</option>
-        </select>
-      </label>
-      <label>カテゴリ
-        <select id="categoryFilter"><option value="all">すべて</option></select>
-      </label>
-      <label>リピート評価
-        <select id="ratingFilter">
-          <option value="all">すべて</option>
-          <option value="yes">リピあり</option>
-          <option value="no">リピなし</option>
-          <option value="unrated">未評価</option>
-        </select>
-      </label>
-    </div>
-  </section>
-
-  <div class="list-head">
-    <h2>食べたいものリスト</h2>
-    <span class="count" id="resultCount"></span>
-  </div>
-  <div id="menuList"></div>
-
-  <section class="panel" style="margin-top:24px">
-    <h2>データのバックアップ</h2>
-    <div class="actions">
-      <button class="secondary" id="exportButton">JSONを書き出す</button>
-      <button class="ghost" id="importButton">JSONを読み込む</button>
-      <input type="file" id="importFile" accept=".json,application/json" class="hidden">
-    </div>
-    <div class="small-note">機種変更やブラウザのデータ削除に備えて、ときどきバックアップしてね。読み込みは現在のデータを置き換えます。</div>
-  </section>
-  <footer>食べたい！</footer>
 </main>
+<button class="fab" id="addButton" type="button" aria-label="食べたいものを追加">＋</button>
+<div class="toast" id="toast" role="status">登録完了！</div>
 
 <script>
 const STORAGE_KEY = "tabetai-list-v1";
-let menus = [];
-let categories = [];
-
-function loadData() {
-  try {
+let menus = [], categories = [], currentTab = "want", toastTimer;
+const $ = id => document.getElementById(id);
+function loadData(){
+  try{
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     menus = Array.isArray(saved.menus) ? saved.menus : [];
     categories = Array.isArray(saved.categories) ? saved.categories : [];
-  } catch(e) {
-    menus = []; categories = [];
-    alert("保存データを読み込めませんでした。");
-  }
+  }catch(e){menus=[];categories=[];alert("保存データを読み込めませんでした。");}
 }
-function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({menus,categories}));
-  } catch(e) {
-    alert("保存できませんでした。ブラウザの空き容量を確認してください。");
-  }
+function saveData(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({menus,categories}));}
+  catch(e){alert("保存できませんでした。ブラウザの空き容量を確認してください。");}
 }
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function safeUrl(v){try{const u=new URL(v);return ["http:","https:"].includes(u.protocol)?u.href:"";}catch(e){return "";}}
+function showToast(message="登録完了！"){
+  $("toast").textContent=message;$("toast").classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),1900);
 }
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[c]);
+function showList(){
+  $("formScreen").classList.add("hidden");$("listScreen").classList.remove("hidden");$("addButton").classList.remove("hidden");
+  render();window.scrollTo({top:0,behavior:"smooth"});
 }
-function safeUrl(value) {
-  try {
-    const u = new URL(value);
-    return ["http:","https:"].includes(u.protocol) ? u.href : "";
-  } catch(e) { return ""; }
+function showForm(item=null){
+  if(!item) currentTab="want";
+  $("menuForm").reset();$("editId").value=item?.id||"";
+  $("menuName").value=item?.name||"";$("categoryInput").value=item?.category||"";
+  $("shopName").value=item?.shop||"";$("shopUrl").value=item?.url||"";
+  $("customMemo").value=item?.customMemo||"";$("generalMemo").value=item?.memo||"";
+  $("formTitle").textContent=item?"メニューを編集":"食べたいものを登録";
+  $("saveButton").textContent=item?"変更を保存":"登録する";
+  $("listScreen").classList.add("hidden");$("formScreen").classList.remove("hidden");$("addButton").classList.add("hidden");
+  renderCategoryOptions();$("categoryInput").value=item?.category||"";
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-function render() {
-  renderStats();
-  renderCategoryOptions();
-  renderCategories();
-  renderMenus();
+function renderStats(){
+  const eaten=menus.filter(m=>m.eaten).length;
+  $("totalCount").textContent=menus.length;$("eatenCount").textContent=eaten;$("uneatenCount").textContent=menus.length-eaten;
 }
-function renderStats() {
-  const eaten = menus.filter(m => m.eaten).length;
-  document.getElementById("totalCount").textContent = menus.length;
-  document.getElementById("eatenCount").textContent = eaten;
-  document.getElementById("uneatenCount").textContent = menus.length-eaten;
+function renderCategoryOptions(){
+  const form=$("categoryInput"),filter=$("categoryFilter"),oldForm=form.value,oldFilter=filter.value;
+  form.innerHTML='<option value="">カテゴリなし</option>'+categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  filter.innerHTML='<option value="all">すべて</option><option value="">カテゴリなし</option>'+categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  if([...form.options].some(o=>o.value===oldForm))form.value=oldForm;
+  if([...filter.options].some(o=>o.value===oldFilter))filter.value=oldFilter;
 }
-function renderCategoryOptions() {
-  const form = document.getElementById("categoryInput");
-  const filter = document.getElementById("categoryFilter");
-  const oldForm = form.value, oldFilter = filter.value;
-  form.innerHTML = '<option value="">カテゴリなし</option>' +
-    categories.map(c => `<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)}</option>`).join("");
-  filter.innerHTML = '<option value="all">すべて</option><option value="">カテゴリなし</option>' +
-    categories.map(c => `<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)}</option>`).join("");
-  if ([...form.options].some(o=>o.value===oldForm)) form.value=oldForm;
-  if ([...filter.options].some(o=>o.value===oldFilter)) filter.value=oldFilter;
+function renderCategories(){
+  $("categoryList").innerHTML=categories.length?categories.map(c=>`
+    <span class="category-chip">${esc(c.name)}
+      <button type="button" data-edit-cat="${esc(c.id)}" aria-label="カテゴリを変更">✎</button>
+      <button type="button" data-delete-cat="${esc(c.id)}" aria-label="カテゴリを削除">×</button>
+    </span>`).join(""):'<span class="small-note">まだカテゴリはありません。</span>';
 }
-function renderCategories() {
-  const el = document.getElementById("categoryList");
-  el.innerHTML = categories.length ? categories.map(c => `
-    <span class="category-chip">
-      ${escapeHTML(c.name)}
-      <button type="button" data-edit-cat="${escapeHTML(c.id)}" aria-label="カテゴリを変更">✎</button>
-      <button type="button" data-delete-cat="${escapeHTML(c.id)}" aria-label="カテゴリを削除">×</button>
-    </span>`).join("") : '<span class="small-note">まだカテゴリはありません。</span>';
-}
-function renderMenus() {
-  const search = document.getElementById("searchInput").value.trim().toLowerCase();
-  const status = document.getElementById("statusFilter").value;
-  const cat = document.getElementById("categoryFilter").value;
-  const rating = document.getElementById("ratingFilter").value;
-  const filtered = menus.filter(m => {
-    const text = (m.name+" "+(m.shop||"")).toLowerCase();
-    if (search && !text.includes(search)) return false;
-    if (status==="eaten" && !m.eaten) return false;
-    if (status==="uneaten" && m.eaten) return false;
-    if (cat!=="all" && (m.category||"")!==cat) return false;
-    if (rating==="yes" && (!m.eaten || m.rating!=="yes")) return false;
-    if (rating==="no" && (!m.eaten || m.rating!=="no")) return false;
-    if (rating==="unrated" && (!m.eaten || m.rating!=="unrated")) return false;
+const checkSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+const editSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>';
+const deleteSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>';
+function renderMenus(){
+  const search=$("searchInput").value.trim().toLowerCase(),cat=$("categoryFilter").value,rating=$("ratingFilter").value;
+  const filtered=menus.filter(m=>{
+    if(currentTab==="want"&&m.eaten)return false;
+    if(currentTab==="eaten"&&!m.eaten)return false;
+    if(search&&!(m.name+" "+(m.shop||"")).toLowerCase().includes(search))return false;
+    if(cat!=="all"&&(m.category||"")!==cat)return false;
+    if(currentTab==="eaten"&&rating!=="all"&&(m.rating||"unrated")!==rating)return false;
     return true;
-  }).sort((a,b) => Number(a.eaten)-Number(b.eaten) || b.created-a.created);
-
-  document.getElementById("resultCount").textContent = filtered.length+"件";
-  const list = document.getElementById("menuList");
-  if (!filtered.length) {
-    list.innerHTML = '<div class="empty">該当するものがありません。<br>気になるメニューを登録してみよう。</div>';
-    return;
-  }
-  list.innerHTML = filtered.map(m => {
-    const category = categories.find(c=>c.id===m.category);
-    const url = safeUrl(m.url);
-    return `
-    <article class="item ${m.eaten?"eaten":""}">
-      <div class="item-top">
-        <div class="item-main">
-          <div class="item-name">${escapeHTML(m.name)}</div>
-          ${m.shop?`<div class="meta">${escapeHTML(m.shop)}</div>`:""}
-          ${category?`<span class="tag">${escapeHTML(category.name)}</span>`:""}
-          ${url?`<div><a class="shop-link" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">お店のページを開く ↗</a></div>`:""}
+  }).sort((a,b)=>(b.created||0)-(a.created||0));
+  $("resultCount").textContent=filtered.length+"件";
+  $("listTitle").textContent=currentTab==="want"?"食べたいものリスト":"食べたものリスト";
+  $("ratingFilterWrap").classList.toggle("hidden",currentTab!=="eaten");
+  $("wantTab").classList.toggle("active",currentTab==="want");$("eatenTab").classList.toggle("active",currentTab==="eaten");
+  if(!filtered.length){$("menuList").innerHTML='<div class="empty">まだ登録がありません。<br>気になるメニューを追加してみよう。</div>';return;}
+  $("menuList").innerHTML=filtered.map(m=>{
+    const c=categories.find(x=>x.id===m.category),url=safeUrl(m.url);
+    const hasMemo=!!(m.customMemo||m.memo);
+    return `<article class="item">
+      <div class="item-head">
+        <div class="item-name">${esc(m.name)}</div>
+        <div class="icon-actions">
+          <button class="icon-btn delete" type="button" data-delete="${esc(m.id)}" aria-label="削除">${deleteSvg}</button>
+          <button class="icon-btn edit" type="button" data-edit="${esc(m.id)}" aria-label="編集">${editSvg}</button>
         </div>
-        <span class="status">${m.eaten?"食べた ✓":"食べたい"}</span>
       </div>
-      ${m.customMemo?`<div class="item-notes"><strong>注文メモ：</strong>${escapeHTML(m.customMemo)}</div>`:""}
-      ${m.memo?`<div class="item-notes"><strong>メモ：</strong>${escapeHTML(m.memo)}</div>`:""}
-      <div class="item-actions">
-        <label class="check-label">
-          <input type="checkbox" data-eaten="${escapeHTML(m.id)}" ${m.eaten?"checked":""}>
-          食べた！
-        </label>
-        ${m.eaten?`
-          <select data-rating="${escapeHTML(m.id)}" aria-label="リピート評価">
-            <option value="unrated" ${m.rating==="unrated"?"selected":""}>未評価</option>
-            <option value="yes" ${m.rating==="yes"?"selected":""}>リピあり</option>
-            <option value="no" ${m.rating==="no"?"selected":""}>リピなし</option>
-          </select>`:""}
-        <button class="ghost" data-edit="${escapeHTML(m.id)}">編集</button>
-        <button class="ghost danger" data-delete="${escapeHTML(m.id)}">削除</button>
+      <div class="item-meta">
+        ${c?`<span class="category-label">${esc(c.name)}</span>`:""}
+        ${m.shop?`<span class="shop-name">${esc(m.shop)}</span>`:""}
+        ${url?`<a class="shop-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">リンク ↗</a>`:""}
+      </div>
+      ${hasMemo?`<button class="memo-toggle" type="button" data-memo="${esc(m.id)}">メモを見る ＋</button><div class="memo-content hidden" id="memo-${esc(m.id)}">${m.customMemo?`<div><strong>注文メモ：</strong>${esc(m.customMemo)}</div>`:""}${m.memo?`<div><strong>その他：</strong>${esc(m.memo)}</div>`:""}</div>`:""}
+      <div class="item-bottom">
+        ${m.eaten?`<select class="rating-select" data-rating="${esc(m.id)}" aria-label="リピート評価">
+          <option value="unrated" ${(m.rating||"unrated")==="unrated"?"selected":""}>リピート評価：未評価</option>
+          <option value="yes" ${m.rating==="yes"?"selected":""}>リピあり</option>
+          <option value="no" ${m.rating==="no"?"selected":""}>リピなし</option>
+        </select>`:'<span></span>'}
+        <button class="eaten-toggle" type="button" data-eaten="${esc(m.id)}" aria-label="${m.eaten?"食べたいものに戻す":"食べたものに移動"}">
+          ${m.eaten?"食べた！":"食べた！"}
+          <span class="check-circle ${m.eaten?"checked":""}">${m.eaten?checkSvg:""}</span>
+        </button>
       </div>
     </article>`;
   }).join("");
 }
-function resetForm() {
-  document.getElementById("menuForm").reset();
-  document.getElementById("editId").value="";
-  document.getElementById("formTitle").textContent="＋ 食べたいものを登録";
-  document.getElementById("saveButton").textContent="登録する";
-  document.getElementById("cancelEdit").classList.add("hidden");
-}
-document.getElementById("menuForm").addEventListener("submit", e => {
-  e.preventDefault();
-  const id = document.getElementById("editId").value;
-  const name = document.getElementById("menuName").value.trim();
-  const rawUrl = document.getElementById("shopUrl").value.trim();
-  if (!name) return;
-  if (rawUrl && !safeUrl(rawUrl)) {
-    alert("URLは http:// または https:// から始まるものを入力してね。");
-    return;
-  }
-  const data = {
-    name,
-    category:document.getElementById("categoryInput").value,
-    shop:document.getElementById("shopName").value.trim(),
-    url:rawUrl,
-    customMemo:document.getElementById("customMemo").value.trim(),
-    memo:document.getElementById("generalMemo").value.trim()
-  };
-  if (id) {
-    const m = menus.find(x=>x.id===id);
-    if (m) Object.assign(m,data);
-  } else {
-    menus.push({id:uid(),...data,eaten:false,rating:"unrated",created:Date.now()});
-  }
-  saveData(); resetForm(); render();
+function render(){renderStats();renderCategoryOptions();renderCategories();renderMenus();}
+$("addButton").addEventListener("click",()=>showForm());
+$("backButton").addEventListener("click",showList);
+$("cancelButton").addEventListener("click",showList);
+$("wantTab").addEventListener("click",()=>{currentTab="want";$("ratingFilter").value="all";renderMenus();});
+$("eatenTab").addEventListener("click",()=>{currentTab="eaten";renderMenus();});
+$("menuForm").addEventListener("submit",e=>{
+  e.preventDefault();const id=$("editId").value,name=$("menuName").value.trim(),rawUrl=$("shopUrl").value.trim();
+  if(!name)return;
+  if(rawUrl&&!safeUrl(rawUrl)){alert("URLは http:// または https:// から始まるものを入力してね。");return;}
+  const data={name,category:$("categoryInput").value,shop:$("shopName").value.trim(),url:rawUrl,customMemo:$("customMemo").value.trim(),memo:$("generalMemo").value.trim()};
+  if(id){const m=menus.find(x=>x.id===id);if(m)Object.assign(m,data);}
+  else menus.push({id:uid(),...data,eaten:false,rating:"unrated",created:Date.now()});
+  saveData();showList();showToast(id?"変更を保存したよ！":"登録完了！");
 });
-document.getElementById("cancelEdit").addEventListener("click", resetForm);
-
-document.getElementById("addCategory").addEventListener("click", () => {
-  const input = document.getElementById("newCategory");
-  const name = input.value.trim();
-  if (!name) return;
-  if (categories.some(c=>c.name===name)) {
-    alert("同じ名前のカテゴリがあるよ。"); return;
-  }
-  categories.push({id:uid(),name});
-  input.value=""; saveData(); render();
+$("addCategory").addEventListener("click",()=>{
+  const name=$("newCategory").value.trim();if(!name)return;
+  if(categories.some(c=>c.name===name)){alert("同じ名前のカテゴリがあるよ。");return;}
+  categories.push({id:uid(),name});$("newCategory").value="";saveData();renderCategoryOptions();renderCategories();showToast("カテゴリを追加したよ！");
 });
-document.getElementById("categoryList").addEventListener("click", e => {
-  const editId = e.target.dataset.editCat;
-  const deleteId = e.target.dataset.deleteCat;
-  if (editId) {
-    const c=categories.find(x=>x.id===editId);
-    const name=prompt("新しいカテゴリ名を入力",c.name);
-    if (name===null) return;
-    const clean=name.trim();
-    if (!clean) {alert("カテゴリ名を入力してね。");return;}
-    if (categories.some(x=>x.id!==editId && x.name===clean)) {
-      alert("同じ名前のカテゴリがあるよ。");return;
-    }
-    c.name=clean; saveData(); render();
+$("categoryList").addEventListener("click",e=>{
+  const editId=e.target.dataset.editCat,deleteId=e.target.dataset.deleteCat;
+  if(editId){const c=categories.find(x=>x.id===editId);if(!c)return;
+    const name=prompt("新しいカテゴリ名を入力",c.name);if(name===null)return;const clean=name.trim();
+    if(!clean){alert("カテゴリ名を入力してね。");return;}
+    if(categories.some(x=>x.id!==editId&&x.name===clean)){alert("同じ名前のカテゴリがあるよ。");return;}
+    c.name=clean;saveData();render();showToast("カテゴリ名を変更したよ！");
   }
-  if (deleteId) {
-    const c=categories.find(x=>x.id===deleteId);
-    if (!confirm(`「${c.name}」を削除する？\nこのカテゴリが付いたメニューはカテゴリなしになるよ。`)) return;
-    menus.forEach(m=>{if(m.category===deleteId)m.category="";});
-    categories=categories.filter(x=>x.id!==deleteId);
-    saveData();render();
+  if(deleteId){const c=categories.find(x=>x.id===deleteId);if(!c)return;
+    if(!confirm(`「${c.name}」を削除する？\nこのカテゴリが付いたメニューはカテゴリなしになるよ。`))return;
+    menus.forEach(m=>{if(m.category===deleteId)m.category="";});categories=categories.filter(x=>x.id!==deleteId);
+    saveData();render();showToast("カテゴリを削除したよ！");
   }
 });
-document.getElementById("menuList").addEventListener("click", e => {
-  const editId=e.target.dataset.edit;
-  const deleteId=e.target.dataset.delete;
-  if (editId) {
-    const m=menus.find(x=>x.id===editId);
-    if (!m) return;
-    document.getElementById("editId").value=m.id;
-    document.getElementById("menuName").value=m.name;
-    document.getElementById("categoryInput").value=m.category||"";
-    document.getElementById("shopName").value=m.shop||"";
-    document.getElementById("shopUrl").value=m.url||"";
-    document.getElementById("customMemo").value=m.customMemo||"";
-    document.getElementById("generalMemo").value=m.memo||"";
-    document.getElementById("formTitle").textContent="メニューを編集";
-    document.getElementById("saveButton").textContent="変更を保存";
-    document.getElementById("cancelEdit").classList.remove("hidden");
-    window.scrollTo({top:0,behavior:"smooth"});
-  }
-  if (deleteId) {
-    const m=menus.find(x=>x.id===deleteId);
-    if (m && confirm(`「${m.name}」を削除する？`)) {
-      menus=menus.filter(x=>x.id!==deleteId);saveData();render();
-    }
-  }
+$("menuList").addEventListener("click",e=>{
+  const editId=e.target.closest("[data-edit]")?.dataset.edit;
+  const deleteId=e.target.closest("[data-delete]")?.dataset.delete;
+  const eatenId=e.target.closest("[data-eaten]")?.dataset.eaten;
+  const memoId=e.target.closest("[data-memo]")?.dataset.memo;
+  if(editId){const m=menus.find(x=>x.id===editId);if(m)showForm(m);}
+  if(deleteId){const m=menus.find(x=>x.id===deleteId);if(m&&confirm(`「${m.name}」を削除する？\nこの操作は取り消せません。`)){menus=menus.filter(x=>x.id!==deleteId);saveData();render();showToast("削除したよ。");}}
+  if(eatenId){const m=menus.find(x=>x.id===eatenId);if(m){m.eaten=!m.eaten;if(!m.eaten)m.rating="unrated";saveData();render();}}
+  if(memoId){const el=$("memo-"+memoId);if(el){const opening=el.classList.contains("hidden");el.classList.toggle("hidden");e.target.closest("[data-memo]").textContent=opening?"メモを閉じる −":"メモを見る ＋";}}
 });
-document.getElementById("menuList").addEventListener("change", e => {
-  const eatenId=e.target.dataset.eaten;
-  const ratingId=e.target.dataset.rating;
-  if (eatenId) {
-    const m=menus.find(x=>x.id===eatenId);
-    if (m) {m.eaten=e.target.checked;if(!m.eaten)m.rating="unrated";}
-    saveData();render();
-  }
-  if (ratingId) {
-    const m=menus.find(x=>x.id===ratingId);
-    if (m) m.rating=e.target.value;
-    saveData();render();
-  }
+$("menuList").addEventListener("change",e=>{
+  const id=e.target.dataset.rating;if(!id)return;const m=menus.find(x=>x.id===id);if(m){m.rating=e.target.value;saveData();renderMenus();}
 });
-["searchInput","statusFilter","categoryFilter","ratingFilter"].forEach(id => {
-  document.getElementById(id).addEventListener("input",renderMenus);
-  document.getElementById(id).addEventListener("change",renderMenus);
-});
-document.getElementById("exportButton").addEventListener("click", () => {
+["searchInput","categoryFilter","ratingFilter"].forEach(id=>$(id).addEventListener("input",renderMenus));
+$("exportButton").addEventListener("click",()=>{
   const blob=new Blob([JSON.stringify({menus,categories},null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download="tabetai-backup.json";a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="tabetai-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-document.getElementById("importButton").addEventListener("click",()=>{
-  document.getElementById("importFile").click();
-});
-document.getElementById("importFile").addEventListener("change", async e => {
+$("importButton").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",async e=>{
   const file=e.target.files[0];if(!file)return;
-  try {
-    const data=JSON.parse(await file.text());
-    if (!data || !Array.isArray(data.menus) || !Array.isArray(data.categories))
-      throw new Error("形式が違います");
-    if (!confirm("現在のデータをすべて置き換えて読み込みます。よろしいですか？")) return;
-    menus=data.menus;
-    categories=data.categories;
-    saveData();render();
-    alert("データを読み込みました！");
-  } catch(err) {
-    alert("読み込めませんでした。正しいバックアップファイルか確認してね。");
-  } finally {e.target.value="";}
+  try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.menus)||!Array.isArray(data.categories))throw new Error("形式が違います");
+    if(!confirm("現在のデータをすべて置き換えて読み込みます。よろしいですか？"))return;
+    menus=data.menus;categories=data.categories;saveData();render();alert("データを読み込みました！");
+  }catch(err){alert("読み込めませんでした。正しいバックアップファイルか確認してね。");}
+  finally{e.target.value="";}
 });
-loadData();
-render();
+loadData();render();
 </script>
 </body>
 </html>
+
